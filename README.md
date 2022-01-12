@@ -17,3 +17,7 @@ then modify last line of /Applications/Wireshark.app/Contents/Resources/share/wi
 ## TODO
 
 pack multiple tcp packets
+
+## Others
+
+thanks to https://github.com/arthur-zhang/rocketmq-wireshark-lua-plugin
