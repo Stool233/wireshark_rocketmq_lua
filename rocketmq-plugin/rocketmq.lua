@@ -130,7 +130,14 @@ local responseCode = {
 -- pinfo 是 Packet Information 的缩写，表示 Packet 包相关的信息，可以获取包的源端口、目标端口等信息。
 -- tree 表示 wireshark UI 界面的展示树，解析包得到的信息都会添加到这个有层级关系的树中。
 function proto.dissector(tvb, pinfo, tree)
-    print("load plugin...")
+
+    -- -- 判断包是否完整，不完整则与下一个包拼接
+    local length = tvb(0, 4):uint()
+    if (tvb:len() - 4) < length then
+        pinfo.desegment_len = length - (tvb:len() - 4)
+        pinfo.desegment_offset = 0
+        return
+    end
 
     local subtree = tree:add(proto, tvb())
     pinfo.cols.protocol = proto.name;
@@ -141,6 +148,7 @@ function proto.dissector(tvb, pinfo, tree)
     subtree:add("Total Length", length)
     local headerLength = tvb(4, 4):uint()
     subtree:add("Header Length", headerLength)
+
 
     local isRemarkFound = false
 
